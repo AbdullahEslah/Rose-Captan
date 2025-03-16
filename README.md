@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # rose_captain
 
 this project for smooth and efficient way to connect with passengers
@@ -17,4 +16,3 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 =======
 # Rose-Captan
->>>>>>> 9791e2f3b03da7ff565db847eed4fb9e4561accc
