@@ -9,8 +9,8 @@ class UserRepositoryImpl implements UserRepository {
   UserRepositoryImpl(this.userRemoteDatasource);
 
   @override
-  Future<void> loginOrCreateDriver(String mobile) async {
-    await userRemoteDatasource.loginOrCreateDriver(mobile);
+  Future<http.Response> loginOrCreateDriver(String mobile) async {
+    return await userRemoteDatasource.loginOrCreateDriver(mobile);
   }
 
   @override

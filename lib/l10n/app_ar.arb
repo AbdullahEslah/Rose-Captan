@@ -1,5 +1,6 @@
 {
   "@@locale": "ar",
+  "appName": "روز كابتن",
   "login": "تسجيل دخول",
   "enterYourMobileNumberToContinue": "اكتب رقم هاتفك للاكمال",
   "yourMobileNumber": "رقم هاتفك",
@@ -32,5 +33,24 @@
   "carImage": "صورة السيارة",
   "licenseImage": "صورة الرخصة",
   "driverImage": "صورة السائق",
-  "submit": "انشاء"
+  "submit": "انشاء",
+  "innova": "أنوفا",
+  "k5": "كي 5",
+  "sonata": "سوناتا",
+  "staria": "ستاريا",
+  "camry": "كامري",
+  "fortuner": "فورشينر",
+  "veloz": "فيلوز",
+  "expander": "إكسباندر",
+  "elantra": "إلنترا",
+  "public_transportation": "الاجرة العامة",
+  "private_transportation": "الاجرة الخاصة",
+  "vip_transportation": "نقل متخصص",
+  "madinah": "المدينة المنورة",
+  "makkah": "مكة",
+  "jeddah": "جدة",
+  "white": "ابيض",
+  "black": "اسود",
+  "silver":"فضي",
+  "grey": "رصاصي"
 }

@@ -1,11 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:http/http.dart' as http;
 import 'package:rose_captain/core/constants/apis.dart';
 
 abstract class UserRemoteDatasource {
-  Future<void> loginOrCreateDriver(String mobile);
+  Future<http.Response> loginOrCreateDriver(String mobile);
   Future<http.Response> verifyDriver(String mobile, String otpNumber);
   Future<void> resendOTPCode(String mobile);
   Future<http.Response> completeDriverProfile(
@@ -33,9 +32,11 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
   UserRemoteDatasourceImpl(this.client);
 
   @override
-  Future<void> loginOrCreateDriver(String mobile) async {
+  Future<http.Response> loginOrCreateDriver(String mobile) async {
     Map<String, dynamic> body = {"mobile": mobile};
-    await client.post(Apis.getEndpoint(Apis.loginOrSignupDriver), body: body);
+    http.Response response = await client
+        .post(Apis.getEndpoint(Apis.loginOrSignupDriver), body: body);
+    return response;
   }
 
   @override
@@ -43,6 +44,7 @@ class UserRemoteDatasourceImpl implements UserRemoteDatasource {
     Map<String, String?> body = {"mobile": mobile, "otp": otpNumber};
     http.Response response =
         await client.post(Apis.getEndpoint(Apis.verifyDriver), body: body);
+
     return response;
   }
 

@@ -11,17 +11,32 @@ import 'package:rose_captain/modules/auth/domain/usecases/driver_verify_login_us
 import 'package:rose_captain/modules/auth/domain/usecases/resend_verification_code_usecase.dart';
 import 'package:rose_captain/modules/auth/presentation/providers/auth_provider.dart';
 import 'package:rose_captain/modules/auth/presentation/providers/complete_profile_provider.dart';
+import 'package:rose_captain/modules/passengers/passengers_details/data/datasources/passengers_remote_datasource.dart';
+import 'package:rose_captain/modules/passengers/passengers_details/data/repositories/passengers_repository_impl.dart';
+import 'package:rose_captain/modules/passengers/passengers_details/domain/usecases/add_passengers_usecase.dart';
+import 'package:rose_captain/modules/passengers/passengers_details/domain/usecases/fetch_passengers_use_case.dart';
 
 import 'modules/auth/presentation/screens/login_screen.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import 'modules/passengers/passengers_details/presentation/provider/passengers_details_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final appLanguage = AppLanguage();
+  // final appLocalization = AppLocalizations.of(context)!
   await appLanguage.loadLanguage(); // تحميل اللغة عند البدء
-  runApp(ChangeNotifierProvider(
-      create: (context) => appLanguage, child: const MyApp()));
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => appLanguage,
+      child: Builder(
+        builder: (context) {
+          return MyApp();
+        },
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -63,6 +78,14 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             ),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => PassengersDetailsProvider(
+              AddPassengersUseCase(
+                  PassengersRepositoryImpl(PassengersRemoteDatasourceImpl())),
+              FetchPassengersUseCase(
+                  PassengersRepositoryImpl(PassengersRemoteDatasourceImpl())),
+            ),
           )
         ],
         child:
@@ -79,13 +102,13 @@ class MyApp extends StatelessWidget {
                 // For iOS widgets localization
               ],
               supportedLocales: [
-                Locale('en', 'IR'), // English
-                Locale('ur', 'IR'), // undo
-                Locale('ar', 'EG') // شق
+                Locale('en'), // English
+                Locale('ur'), // Undo
+                Locale('ar') // Arabic
                 // Add more locales as needed
               ],
               debugShowCheckedModeBanner: false,
-              title: 'Rose Captan',
+              //title: AppLocalizations.of(context)?.appName,
               theme: ThemeData(
                 // This is the theme of your application.
                 //

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
+import 'package:rose_captain/modules/home/presentation/screens/home_screen.dart';
 
 import '../../../../core/custom_widgets/custom_text_field/text_field_widget.dart';
 import '../enums/verify_number_enum.dart';
@@ -88,19 +91,44 @@ class VerifyNumberScreen extends StatelessWidget {
           // editRoomProvider.resetFields();
 
           // if (ScaffoldMessenger.of(context).mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-                content: Text(
-              'Verified Successfully!',
-              style: TextStyle(color: Colors.green),
-            )),
-          );
+          final response = authProvider.verifyResponse;
+          if (response?.statusCode == 200) {
+            if (jsonDecode(response?.body ?? "")["driver"]["name"] != "guest") {
+              //  go to passengers screen
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "verified successfully",
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                ),
+              );
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomeScreen()),
+              );
+            } else {
+              /*
+
+               */
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    "your mobile number has verified successfully",
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                ),
+              );
+              //  go to complete profile screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CompleteDriverProfileScreen()),
+              );
+            }
+          }
+
           // }
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => CompleteDriverProfileScreen()),
-          );
           authProvider.resetVerifyState();
         });
 

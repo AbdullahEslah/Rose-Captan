@@ -1,5 +1,6 @@
 {
   "@@locale": "en",
+  "appName": "Rose Captan",
   "login": "Login",
   "enterYourMobileNumberToContinue": "Enter Your Mobile Number To Continue",
   "yourMobileNumber": "Your Mobile Number",
@@ -32,5 +33,24 @@
   "carImage": "Car Image",
   "licenseImage": "License Image",
   "driverImage": "Driver Image",
-  "submit": "Submit"
+  "submit": "Submit",
+  "innova": "Innova",
+  "k5": "K5",
+  "sonata": "Sonata",
+  "staria": "Staria",
+  "camry": "Camry",
+  "fortuner": "Fortuner",
+  "veloz": "Veloz",
+  "expander": "Expander",
+  "elantra": "Elantra",
+  "public_transportation": "الاجرة العامة",
+  "private_transportation": "الاجرة الخاصة",
+  "vip_transportation": "نقل متخصص",
+  "madinah": "Madinah",
+  "makkah": "Makkah",
+  "jeddah": "Jeddah",
+  "white": "white",
+  "black": "black",
+  "silver":"silver",
+  "grey": "grey"
 }

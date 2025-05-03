@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 abstract class UserRepository {
   //used for login or create driver
-  Future<void> loginOrCreateDriver(String mobile);
+  Future<http.Response> loginOrCreateDriver(String mobile);
   Future<http.Response> verifyDriver(String mobile, String otpNumber);
   Future<void> resendOTPCode(String mobile);
   Future<http.Response> completeDriverProfile(

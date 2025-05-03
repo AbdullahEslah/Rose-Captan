@@ -1,5 +1,6 @@
 {
   "@@locale": "ur",
+  "appName": "روز کیپٹن",
   "login": "لاگ ان",
   "mobile": "موبائل",
   "enterYourMobileNumberToContinue": "اپنا موبائل نمبر درج کریں جاری رکھنے کے لئے۔",
@@ -32,5 +33,24 @@
   "carImage": "کار کی تصویر",
   "licenseImage": "لائسنس کی تصویر",
   "driverImage": "ڈرائیور کی تصویر",
-  "submit": "جمع کروائیں۔"
+  "submit": "جمع کروائیں۔",
+  "innova": "Innova",
+  "k5": "K5",
+  "sonata": "Sonata",
+  "staria": "Staria",
+  "camry": "Camry",
+  "fortuner": "Fortuner",
+  "veloz": "Veloz",
+  "expander": "Expander",
+  "elantra": "Elantra",
+  "public_transportation": "عوامی نقل و حمل",
+  "private_transportation": "نجی نقل و حمل",
+  "vip_transportation": "وی آئی پی نقل و حمل",
+  "madinah": "Madinah",
+  "makkah": "Makkah",
+  "jeddah": "Jeddah",
+  "white": "سفید",
+  "black": "کالا",
+  "silver": "چاندی",
+  "grey": "سرمئی"
 }

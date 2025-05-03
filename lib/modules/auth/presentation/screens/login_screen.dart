@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
@@ -55,9 +57,7 @@ class LoginScreen extends StatelessWidget {
                 backgroundColor: Colors.blue[900],
                 textStyle:
                     TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-            onPressed: () async {
-              await authProvider.loginDriver();
-            },
+            onPressed: () async => await authProvider.loginDriver(),
             child: Text(appLocalizations.login),
           )
         ],
@@ -88,22 +88,38 @@ class LoginScreen extends StatelessWidget {
                     called during the build phase
                   */
         SchedulerBinding.instance.addPostFrameCallback((_) {
-          // editRoomProvider.resetFields();
+          final response = authProvider.loginResponse;
+          if (response?.statusCode == 200) {
+            if (jsonDecode(response?.body ?? "")["message"] ==
+                "Please wait until your account is approved.") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  duration: Duration(seconds: 6),
+                  content: Text(
+                    "Please wait until your account is approved.",
+                    style: const TextStyle(color: Colors.green),
+                  ),
+                ),
+              );
+            }
+            if (jsonDecode(response?.body ?? "")["message"] ==
+                "OTP sent to your mobile number.") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'OTP sent to your mobile number.',
+                    style: TextStyle(color: Colors.green),
+                  ),
+                ),
+              );
+              //  go to verify screen
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => VerifyNumberScreen()),
+              );
+            }
+          }
 
-          // if (ScaffoldMessenger.of(context).mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text(
-                'Logged in Successfully!',
-                style: TextStyle(color: Colors.green),
-              ),
-            ),
-          );
-          // }
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => VerifyNumberScreen()),
-          );
           authProvider.resetLoginState();
         });
 
@@ -156,7 +172,7 @@ class LoginScreen extends StatelessWidget {
                     Align(
                       alignment: AlignmentDirectional.topEnd,
                       child: SizedBox(
-                        width: MediaQuery.sizeOf(context).width * 0.25,
+                        width: MediaQuery.sizeOf(context).width * 0.28,
                         height: screenHeight * 0.07,
                         child: InputDecorator(
                           isFocused: true,
@@ -166,17 +182,39 @@ class LoginScreen extends StatelessWidget {
                             focusedBorder: b,
                           ),
                           child: DropdownButton(
+                            iconSize: 28,
                             onChanged: (value) => languageProvider
                                 .changeLanguage(Locale(value ?? "")),
                             value: languageProvider.appLocal
                                 .toString(), // change this line with your way to get current locale to select it as default in dropdown
                             items: [
                               const DropdownMenuItem(
-                                  value: 'en', child: Text('English')),
+                                value: 'en',
+                                child: Text(
+                                  'English',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                              ),
                               const DropdownMenuItem(
-                                  value: 'ur', child: Text('اردو زبان')),
+                                value: 'ur',
+                                child: Text(
+                                  'اردو زبان',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                              ),
                               const DropdownMenuItem(
-                                  value: 'ar', child: Text('العربية'))
+                                value: 'ar',
+                                child: Text(
+                                  'العربية',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14),
+                                ),
+                              )
                             ],
                           ),
                         ),

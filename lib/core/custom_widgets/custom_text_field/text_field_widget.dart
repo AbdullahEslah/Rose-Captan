@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/lang/app_language_provider.dart';
-
 class CustomTextFieldForm extends StatelessWidget {
   final void Function(String)? onChanged;
   final String emptyValueText;
@@ -23,6 +21,9 @@ class CustomTextFieldForm extends StatelessWidget {
   final FocusNode? focus;
   final TextDirection? textDirection;
   final TextAlign? textAlign;
+  final List<TextInputFormatter>? inputFormatters;
+  final int? minLength;
+  final String? minLengthErrorText;
 
   const CustomTextFieldForm({
     super.key,
@@ -42,31 +43,37 @@ class CustomTextFieldForm extends StatelessWidget {
     this.keyboardType,
     this.textDirection,
     this.textAlign,
+    this.inputFormatters,
+    this.minLength,
+    this.minLengthErrorText,
   });
 
   @override
   Widget build(BuildContext context) {
-    final languageProvider = Provider.of<AppLanguage>(context, listen: false);
     return GestureDetector(
       onTap: () {
         SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
       },
       child: TextFormField(
+        inputFormatters: inputFormatters,
         textAlign: textAlign ?? TextAlign.start,
         textDirection: textDirection,
         focusNode: focus,
-        onTapOutside: (event) {
-          // FocusScopeNode currentFocus = FocusScope.of(context);
-          // if (!currentFocus.hasPrimaryFocus &&
-          //     currentFocus.focusedChild != null) {
-          //   FocusManager.instance.primaryFocus?.unfocus();
-          // }
-        },
         keyboardType: keyboardType,
         onChanged: onChanged,
         validator: (value) {
           if (value == null || value.isEmpty) {
             return emptyValueText;
+          }
+          if (minLength != null &&
+              value.length < minLength! &&
+              minLengthErrorText != null) {
+            return minLengthErrorText;
+          }
+
+          // ✅ إضافة فحص مخصص لو موجود من برة
+          if (validator != null) {
+            return validator!(value);
           }
           return null;
         },

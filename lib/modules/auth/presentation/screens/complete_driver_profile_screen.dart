@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:rose_captain/core/custom_widgets/custom_text_field/custom_dropdown_textField.dart';
 import 'package:rose_captain/modules/auth/presentation/providers/complete_profile_provider.dart';
 
 import '../../../../core/custom_widgets/custom_text_field/text_field_widget.dart';
@@ -33,6 +35,7 @@ class CompleteDriverProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.sizeOf(context).height;
     final appLocalizations = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: GestureDetector(
         onTap: () {
@@ -72,23 +75,33 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: () {
-                              /*
-                            if current pageViewIndex == 1 || 2 || 3
-                            => go previous pageView else pop
-                           */
-                              if (completeProfileProvider.currentPageView == 1 ||
-                                  completeProfileProvider.currentPageView ==
-                                      2 ||
-                                  completeProfileProvider.currentPageView ==
-                                      3) {
+                              if (completeProfileProvider.currentPageView ==
+                                  0) {
+                                Navigator.pop(context);
+                              } else {
                                 completeProfileProvider.pageController
                                     .previousPage(
                                         duration:
                                             const Duration(milliseconds: 500),
                                         curve: Curves.easeInOut);
-                              } else {
-                                Navigator.pop(context);
                               }
+                              /*
+                            if current pageViewIndex == 1 || 2 || 3
+                            => go previous pageView else pop
+                           */
+                              // if (completeProfileProvider.currentPageView == 1 ||
+                              //     completeProfileProvider.currentPageView ==
+                              //         2 ||
+                              //     completeProfileProvider.currentPageView ==
+                              //         3) {
+                              //   completeProfileProvider.pageController
+                              //       .previousPage(
+                              //           duration:
+                              //               const Duration(milliseconds: 500),
+                              //           curve: Curves.easeInOut);
+                              // } else {
+                              //   Navigator.pop(context);
+                              // }
                             },
                             child: Icon(
                               color: Colors.white,
@@ -214,11 +227,13 @@ class CompleteDriverProfileScreen extends StatelessWidget {
           //       builder: (context) => CompleteDriverProfileScreen()),
           // );
           completeProfileProvider.resetCompleteProfileState();
+          completeProfileProvider.resetCurrentPageView();
         });
 
       //  error
       case CompleteProfileEnum.error:
         WidgetsBinding.instance.addPostFrameCallback((_) {
+          completeProfileProvider.resetCurrentPageView();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -227,6 +242,7 @@ class CompleteDriverProfileScreen extends StatelessWidget {
               ),
             ),
           );
+          completeProfileProvider.resetCurrentPageView();
           completeProfileProvider.resetCompleteProfileState();
         });
     }
@@ -283,6 +299,9 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 placeholder: appLocalizations.idNumber,
                 emptyValueText: 'please type your id number',
+                inputFormatters: [LengthLimitingTextInputFormatter(10)],
+                minLength: 10,
+                minLengthErrorText: 'ID Number must be at least 10 numbers',
                 focus: idNumberFocus,
               ),
               SizedBox(height: screenHeight * 0.04),
@@ -358,15 +377,18 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                     fontSize: 13),
               ),
               SizedBox(height: screenHeight * 0.01),
-              CustomTextFieldForm(
+              CustomDropdownTextField(
+                placeholder: appLocalizations.companyType,
                 controller:
                     completeProfileProvider.companyTypeTextFieldController,
+                options: [
+                  appLocalizations.public_transportation,
+                  appLocalizations.private_transportation,
+                  appLocalizations.vip_transportation,
+                ],
                 onChanged: (nameChanged) => completeProfileProvider
                     .updateCompanyTypeTextField(nameChanged),
-                keyboardType: TextInputType.text,
-                placeholder: appLocalizations.companyType,
                 emptyValueText: 'please type company type',
-                focus: companyTypeFocus,
               ),
               SizedBox(height: screenHeight * 0.03),
               Text(
@@ -377,15 +399,18 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                     fontSize: 13),
               ),
               SizedBox(height: screenHeight * 0.01),
-              CustomTextFieldForm(
+              CustomDropdownTextField(
+                placeholder: appLocalizations.placeOfCompany,
                 controller:
                     completeProfileProvider.companyPlaceTextFieldController,
+                options: [
+                  appLocalizations.madinah,
+                  appLocalizations.makkah,
+                  appLocalizations.jeddah,
+                ],
                 onChanged: (textChanged) => completeProfileProvider
                     .updateCompanyPlaceTextField(textChanged),
-                keyboardType: TextInputType.text,
-                placeholder: appLocalizations.placeOfCompany,
                 emptyValueText: 'please type your company place',
-                focus: placeOfCompanyFocus,
               ),
               SizedBox(height: screenHeight * 0.03),
               Text(
@@ -397,6 +422,14 @@ class CompleteDriverProfileScreen extends StatelessWidget {
               ),
               SizedBox(height: screenHeight * 0.01),
               CustomTextFieldForm(
+                leftWidget: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    "7",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ),
                 controller: completeProfileProvider
                     .companyRegistrationNumberTextFieldController,
                 onChanged: (textChanged) => completeProfileProvider
@@ -405,6 +438,10 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                 placeholder: appLocalizations.companyRegistrationNumber,
                 emptyValueText: 'please type your Company Registration Number',
                 focus: registrationCompanyNumFocus,
+                inputFormatters: [LengthLimitingTextInputFormatter(9)],
+                minLength: 9,
+                minLengthErrorText:
+                    'Registration Number must be at least 9 numbers',
               ),
               SizedBox(height: screenHeight * 0.04),
               Align(
@@ -463,15 +500,23 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                       fontSize: 13),
                 ),
                 SizedBox(height: screenHeight * 0.01),
-                CustomTextFieldForm(
+                CustomDropdownTextField(
+                  placeholder: appLocalizations.carType,
                   controller:
                       completeProfileProvider.carTypeTextFieldController,
+                  options: [
+                    appLocalizations.innova,
+                    appLocalizations.k5,
+                    appLocalizations.sonata,
+                    appLocalizations.staria,
+                    appLocalizations.camry,
+                    appLocalizations.fortuner,
+                    appLocalizations.expander,
+                    appLocalizations.elantra,
+                  ],
                   onChanged: (textChanged) => completeProfileProvider
                       .updateCarTypeTextField(textChanged),
-                  keyboardType: TextInputType.text,
-                  placeholder: appLocalizations.carType,
-                  emptyValueText: 'please type your car type',
-                  focus: carTypeFocus,
+                  emptyValueText: 'please choose your car type',
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 Text(
@@ -482,15 +527,21 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                       fontSize: 13),
                 ),
                 SizedBox(height: screenHeight * 0.01),
-                CustomTextFieldForm(
+                CustomDropdownTextField(
+                  placeholder: appLocalizations.numOfPassengers,
                   controller: completeProfileProvider
                       .numOfPassengersTextFieldController,
+                  options: [
+                    "4",
+                    "5",
+                    "6",
+                    "7",
+                    "8",
+                    "9",
+                  ],
                   onChanged: (textChanged) => completeProfileProvider
                       .updateNumberOfPassengersTextField(textChanged),
-                  keyboardType: TextInputType.number,
-                  placeholder: appLocalizations.numOfPassengers,
-                  emptyValueText: 'please type number of passengers',
-                  focus: numOfPassengersFocus,
+                  emptyValueText: 'please choose number of passengers',
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 Text(
@@ -501,15 +552,23 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                       fontSize: 13),
                 ),
                 SizedBox(height: screenHeight * 0.01),
-                CustomTextFieldForm(
+                CustomDropdownTextField(
+                  placeholder: appLocalizations.numOfPassengers,
                   controller:
                       completeProfileProvider.carModelTextFieldController,
+                  options: [
+                    "2019",
+                    "2020",
+                    "2021",
+                    "2022",
+                    "2023",
+                    "2024",
+                    "2025",
+                    "2026",
+                  ],
                   onChanged: (textChanged) => completeProfileProvider
                       .updateCarModelTextField(textChanged),
-                  keyboardType: TextInputType.text,
-                  placeholder: appLocalizations.carModel,
-                  emptyValueText: 'please type your Car Model',
-                  focus: carModelFocus,
+                  emptyValueText: 'please choose your Car Model',
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 Text(
@@ -520,15 +579,19 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                       fontSize: 13),
                 ),
                 SizedBox(height: screenHeight * 0.01),
-                CustomTextFieldForm(
+                CustomDropdownTextField(
+                  placeholder: appLocalizations.carColor,
                   controller:
                       completeProfileProvider.carColorTextFieldController,
+                  options: [
+                    appLocalizations.white,
+                    appLocalizations.black,
+                    appLocalizations.silver,
+                    appLocalizations.grey,
+                  ],
                   onChanged: (textChanged) => completeProfileProvider
                       .updateCarColorTextField(textChanged),
-                  keyboardType: TextInputType.text,
-                  placeholder: appLocalizations.carColor,
-                  emptyValueText: 'please type your Car Color',
-                  focus: carColorFocus,
+                  emptyValueText: 'please choose your Car Color',
                 ),
                 SizedBox(height: screenHeight * 0.03),
                 Text(
@@ -811,7 +874,26 @@ class CompleteDriverProfileScreen extends StatelessWidget {
                     );
                     return;
                   }
-                  await completeProfileProvider.completeProfile(context);
+                  await completeProfileProvider
+                      .completeProfile(context)
+                      .then((response) {
+                    if (response?.statusCode == 200 ||
+                        response?.statusCode == 201) {
+                      if (context.mounted) {
+                        //  show waiting status
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            duration: Duration(seconds: 6),
+                            content: Text(
+                              textAlign: TextAlign.start,
+                              "Your Data Submitted Successfully.\n Please wait until your account is approved.",
+                              style: const TextStyle(color: Colors.green),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  });
                 },
                 child: Text(
                   style: TextStyle(fontSize: 20),
